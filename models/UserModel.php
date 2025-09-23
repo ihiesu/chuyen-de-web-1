@@ -65,13 +65,25 @@ class UserModel extends BaseModel {
      * @return mixed
      */
     public function insertUser($input) {
-        $sql = "INSERT INTO `app_web1`.`users` (`name`, `password`) VALUES (" .
-                "'" . $input['name'] . "', '".md5($input['password'])."')";
+    $name     = mysqli_real_escape_string(self::$_connection, $input['name']);
+    $fullname = mysqli_real_escape_string(self::$_connection, $input['fullname']);
+    $email    = mysqli_real_escape_string(self::$_connection, $input['email']);
+    $type     = mysqli_real_escape_string(self::$_connection, $input['type']);
+    $password = md5($input['password']);
 
-        $user = $this->insert($sql);
+    $sql = "INSERT INTO users (name, fullname, email, type, password)
+            VALUES ('$name', '$fullname', '$email', '$type', '$password')";
 
-        return $user;
+    $result = $this->insert($sql);
+
+    if (!$result) {
+        die("❌ Lỗi SQL khi insert user: " . mysqli_error(self::$_connection));
     }
+
+    return $result;
+}
+
+
 
     /**
      * Search users

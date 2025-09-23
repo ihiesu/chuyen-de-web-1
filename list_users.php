@@ -71,4 +71,55 @@ $users = $userModel->getUsers($params);
         <?php } ?>
     </div>
 </body>
+<script>
+function saveUserActivity(action) {
+    let logs = JSON.parse(localStorage.getItem("user_logs")) || [];
+
+    logs.push({
+        action: action,
+        time: new Date().toLocaleString()
+    });
+
+    localStorage.setItem("user_logs", JSON.stringify(logs));
+}
+
+// ===== 1. Log khi user vào trang =====
+if (localStorage.getItem("user_id")) {
+    saveUserActivity("Truy cập trang: " + window.location.pathname + window.location.search);
+}
+
+// ===== 2. Log click vào mọi nút, link =====
+document.addEventListener("click", function(e) {
+    if (e.target.tagName === "A" || e.target.tagName === "BUTTON") {
+        let text = e.target.innerText || e.target.getAttribute("title") || e.target.getAttribute("name") || "Nút không rõ";
+        saveUserActivity("Click vào: " + text);
+    }
+});
+
+// ===== 3. Log khi submit form =====
+document.addEventListener("submit", function(e) {
+    let formName = e.target.getAttribute("id") || e.target.getAttribute("name") || "Form không rõ";
+    saveUserActivity("Submit form: " + formName);
+});
+
+// ===== 4. Log khi nhập dữ liệu input =====
+document.addEventListener("change", function(e) {
+    if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT" || e.target.tagName === "TEXTAREA") {
+        let fieldName = e.target.getAttribute("name") || e.target.getAttribute("id") || "Trường không rõ";
+        saveUserActivity("Thay đổi dữ liệu: " + fieldName + " = " + e.target.value);
+    }
+});
+
+// ===== 5. Log logout (xoá user_id khỏi localStorage) =====
+function logout() {
+    saveUserActivity("Logout");
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("username");
+}
+
+// Debug: in log ra console
+console.log("=== Nhật ký hoạt động người dùng ===");
+console.log(JSON.parse(localStorage.getItem("user_logs")) || []);
+</script>
+
 </html>
