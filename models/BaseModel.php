@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/configs/database.php';
+require_once __DIR__ . '/../configs/database.php';
 
 abstract class BaseModel {
     // Database connection
