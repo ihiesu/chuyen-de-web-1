@@ -8,6 +8,14 @@ class UserModel extends BaseModel {
         return !empty($rows) ? $rows[0] : null;
     }
 
+    public function findUserById($id) {
+        $sql = 'SELECT * FROM users WHERE id = '.$id;
+        $user = $this->select($sql);
+
+        return $user;
+    }
+
+    
     public function findUser($keyword) {
         return $this->select(
             "SELECT * FROM users WHERE name LIKE CONCAT('%', ?, '%') OR email LIKE CONCAT('%', ?, '%')",
