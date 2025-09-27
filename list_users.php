@@ -58,7 +58,7 @@ $csrf_token = $_SESSION['csrf_token'];
                         <a href="form_user.php?id=<?php echo (int)$user['id']; ?>" title="Update">
                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                         </a>
-                        <a href="form_user.php?id=<?php echo (int)$user['id']; ?>&action=view" title="View">
+                        <a href="view_user.php?id=<?php echo (int)$user['id']; ?>&action=view" title="View">
                             <i class="fa fa-eye" aria-hidden="true"></i>
                         </a>
 

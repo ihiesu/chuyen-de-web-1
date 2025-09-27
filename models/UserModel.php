@@ -108,4 +108,6 @@ class UserModel extends BaseModel {
         }
         return $this->select("SELECT * FROM users");
     }
+
+    
 }
