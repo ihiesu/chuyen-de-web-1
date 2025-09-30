@@ -21,7 +21,6 @@ try {
     $_SESSION['message'] = 'Lỗi khi lấy danh sách users';
 }
 
-// Ensure CSRF token for delete forms (do not unset existing token)
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
@@ -36,10 +35,8 @@ $csrf_token = $_SESSION['csrf_token'];
 <body>
 <?php include 'views/header.php'?>
 <div class="container">
-    <?php if (!empty($users)) {?>
-        <div class="alert alert-warning" role="alert">
-            List of users! <br>
-        </div>
+    <?php if (!empty($users)) { ?>
+        <div class="alert alert-warning" role="alert">List of users</div>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -51,18 +48,18 @@ $csrf_token = $_SESSION['csrf_token'];
                 </tr>
             </thead>
             <tbody>
-            <?php foreach ($users as $user) {?>
+            <?php foreach ($users as $user) { ?>
                 <tr>
-                    <th scope="row"><?php echo (int)$user['id'];?></th>
-                    <td><?php echo htmlspecialchars($user['name']);?></td>
-                    <td><?php echo htmlspecialchars($user['fullname']);?></td>
-                    <td><?php echo htmlspecialchars($user['type']);?></td>
+                    <th scope="row"><?php echo (int)$user['id']; ?></th>
+                    <td><?php echo htmlspecialchars($user['name']); ?></td>
+                    <td><?php echo htmlspecialchars($user['fullname']); ?></td>
+                    <td><?php echo htmlspecialchars($user['type']); ?></td>
                     <td>
-                        <a href="form_user.php?id=<?php echo (int)$user['id']; ?>">
-                            <i class="fa fa-pencil-square-o" aria-hidden="true" title="Update"></i>
+                        <a href="form_user.php?id=<?php echo (int)$user['id']; ?>" title="Update">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                         </a>
-                        <a href="view_user.php?id=<?php echo (int)$user['id']; ?>">
-                            <i class="fa fa-eye" aria-hidden="true" title="View"></i>
+                        <a href="view_user.php?id=<?php echo (int)$user['id']; ?>&action=view" title="View">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
                         </a>
 
                         <form method="POST" action="delete_user.php" style="display:inline; margin:0; padding:0;">
@@ -78,14 +75,12 @@ $csrf_token = $_SESSION['csrf_token'];
             </tbody>
         </table>
     <?php } else { ?>
-        <div class="alert alert-dark" role="alert">
-            Không có user nào.
-        </div>
+        <div class="alert alert-dark" role="alert">Không có user nào.</div>
     <?php } ?>
 </div>
 </body>
 <script>
-// LocalStorage logging (escape khi lưu)
+// Escape before storing to localStorage to mitigate client-side XSS in logs
 function escapeHtml(str) {
   if (!str) return '';
   return String(str).replace(/[&<>"']/g, function(m) {

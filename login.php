@@ -45,20 +45,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['submit'])) {
     try {
         $user = $userModel->auth($name, $password);
     } catch (Exception $e) {
-        // in production chỉ log, không hiển thị chi tiết
         $_SESSION['message'] = 'Lỗi nội bộ';
         header('Location: login.php');
         exit;
     }
 
     if (!empty($user)) {
-        // login thành công
         session_regenerate_id(true);
         $_SESSION['id'] = $user['id'];
         $_SESSION['username'] = $user['name'];
         $_SESSION['message'] = 'Đăng nhập thành công';
 
-        // An toàn: dùng json_encode để tránh XSS khi gán vào localStorage
         $jsUserId = json_encode((string)$user['id']);
         $jsUserName = json_encode((string)$user['name']);
 
@@ -82,34 +79,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['submit'])) {
 <html>
 <head>
 <title>Login</title>
-<?php include 'views/meta.php' ?>
+<?php include 'views/meta.php'; ?>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 </head>
 <body>
-<?php include 'views/header.php' ?>
+<?php include 'views/header.php'; ?>
 
 <div class="container">
-    <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+    <div id="loginbox" style="margin-top:50px;" 
+         class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
         <div class="panel panel-info">
             <div class="panel-heading">
                 <div class="panel-title">Login</div>
-                <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="#">Forgot password?</a></div>
+                <div style="float:right; font-size: 80%; position: relative; top:-10px">
+                    <a href="#">Forgot password?</a>
+                </div>
             </div>
 
             <div style="padding-top:30px" class="panel-body">
                 <?php if (!empty($_SESSION['message'])) { ?>
-                    <div class="alert alert-warning"><?php echo htmlspecialchars($_SESSION['message']); unset($_SESSION['message']); ?></div>
+                    <div class="alert alert-warning">
+                        <?php echo htmlspecialchars($_SESSION['message']); ?>
+                    </div>
+                    <?php unset($_SESSION['message']); ?>
                 <?php } ?>
+
                 <form method="post" class="form-horizontal" role="form">
-                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
+                    <input type="hidden" name="csrf_token" 
+                           value="<?php echo htmlspecialchars($csrf_token); ?>">
 
                     <div class="margin-bottom-25 input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                        <input id="login-username" type="text" class="form-control" name="name" placeholder="Username or Email" required>
+                        <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-user"></i>
+                        </span>
+                        <input id="login-username" type="text" class="form-control" 
+                               name="name" placeholder="Username or Email" required>
                     </div>
 
                     <div class="margin-bottom-25 input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                        <input id="login-password" type="password" class="form-control" name="password" placeholder="Password" required>
+                        <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-lock"></i>
+                        </span>
+                        <input id="login-password" type="password" class="form-control" 
+                               name="password" placeholder="Password" required>
                     </div>
 
                     <div class="margin-bottom-25">
@@ -119,7 +131,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['submit'])) {
 
                     <div class="margin-bottom-25 input-group">
                         <div class="col-sm-12 controls">
-                            <button type="submit" name="submit" value="submit" class="btn btn-primary">Login</button>
+                            <button type="submit" name="submit" value="submit" 
+                                    class="btn btn-primary">Login</button>
                         </div>
                     </div>
 
@@ -135,6 +148,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['submit'])) {
         </div>
     </div>
 </div>
-
 </body>
 </html>

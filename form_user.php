@@ -16,7 +16,6 @@ $csrf_token = $_SESSION['csrf_token'];
 
 $user = null;
 $_id = null;
-
 if (!empty($_GET['id'])) {
     $_id = (int)$_GET['id'];
     $user = $userModel->getUserByIdSingle($_id);
@@ -31,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['submit'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     $csrf_token = $_SESSION['csrf_token'];
 
-    // Lấy dữ liệu từ POST (sanitize cơ bản)
     $data = [
         'id' => isset($_POST['id']) ? (int)$_POST['id'] : null,
         'name' => trim((string)($_POST['name'] ?? '')),
@@ -68,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['submit'])) {
 <div class="container">
     <?php if ($user || !isset($_id)) { ?>
         <div class="alert alert-warning" role="alert">User form</div>
-        <form method="POST">
+        <form method="POST" class="form">
             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
             <input type="hidden" name="id" value="<?php echo htmlspecialchars($_id); ?>">
 
